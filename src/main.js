@@ -23,7 +23,7 @@ const generateMap = umapData => {
 export const store = new Vuex.Store({
 	state: {
 		currentLevel: null,
-		levelId: 0,
+		levelId: parseInt(localStorage.getItem('unitgameLevel')) || 0,
 		actions: [],
 		functions: [],
 		activeFunctionsCell: {f: 0, s: 0},
@@ -46,7 +46,6 @@ export const store = new Vuex.Store({
 			state.playerDirection = state.currentLevel.initialPlayer.direction;
 		},
 		loadLevel(state, level) {
-			console.log(level);
 			state.currentLevel = Object.assign({}, level);
 			this.commit('loadMap', level.umap);
 			state.playerSquare = state.currentLevel.umap[state.currentLevel.initialPlayer.x][state.currentLevel.initialPlayer.y];
@@ -58,7 +57,6 @@ export const store = new Vuex.Store({
 				state.functions.push(Array(f).fill(null).map(i => ({color: null, command: null})));
 			});
 
-			state.actions = [];
 			state.activeFunctionsCell = {f: 0, s: 0};
 			state.pickedStars = 0;
 			state.counter = 0;
@@ -79,7 +77,8 @@ export const store = new Vuex.Store({
 		},
 		win(state) {
 			if (levels[state.levelId + 1]) {
-				state.levelId++;
+				localStorage.setItem('unitgameLevel', state.levelId + 1 + '');
+				state.levelId = parseInt(localStorage.getItem('unitgameLevel'));
 				this.commit('loadLevel', levels[state.levelId]);
 			} else {
 				console.log('No more levels');
@@ -247,6 +246,12 @@ export const store = new Vuex.Store({
 
 			let con = store.state.actions;
 			promiseMaker(con[store.state.counter]);
+		},
+		progress(store) {
+			this.commit('stop');
+			localStorage.setItem('unitgameLevel', '0');
+			store.state.levelId = 0;
+			this.commit('loadLevel', levels[store.state.levelId]);
 		}
 	}
 });

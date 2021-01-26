@@ -10,6 +10,7 @@
 				command: action.command,
 				action: 'choseCell'
 			}"
+			:key="squareIndex"
 		/>
 	</div>
 </template>

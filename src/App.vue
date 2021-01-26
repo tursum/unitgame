@@ -25,16 +25,17 @@
 			<div class="commands">
 				<p>Commands</p>
 				<ul>
-					<SquareHandler v-for="command in commands" :square="{command, action: 'choseCommand'}" />
+					<SquareHandler v-for="(command, id) in commands" :key="id" :square="{command, action: 'choseCommand'}" />
 				</ul>	
 			</div>
 			<div class="colors">
 				<p>Colors</p>
 				<ul>
-					<SquareHandler v-for="color in colors" :square="{color, action: 'choseColor'}" />
+					<SquareHandler v-for="(color, id) in colors" :key="id" :square="{color, action: 'choseColor'}" />
 				</ul>
 			</div>
 		</div>
+		<button class="null-progress" @click="progress">Сбросить прогресс</button>
 	</div>
 </template>
 
@@ -50,7 +51,8 @@
 				return this.$store.state.functions;
 			},
 			commands() {
-				let commandsList = this.$store.state.currentLevel.commands;
+				let commandsList = Object.assign([], this.$store.state.currentLevel.commands);
+
 				this.$store.state.functions.forEach((f, id) => {
 					commandsList.push(`insertF${id}`);
 				});
@@ -83,6 +85,9 @@
 			},
 			setSpeed(speed) {
 				this.$store.commit('setSpeed', speed);
+			},
+			progress() {
+				this.$store.dispatch('progress');
 			}
 		}
 	}

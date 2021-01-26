@@ -1,6 +1,6 @@
 <template>
 	<div class="field">
-		<SquareField v-for="square in squaresMap" :square="square" />
+		<SquareField v-for="(square, id) in squaresMap" :square="square" :key="id" />
 	</div>
 </template>
 
